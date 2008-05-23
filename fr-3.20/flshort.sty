@@ -1,0 +1,235 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Contents: Special Commands for the LShort2e Introduction
+% $Id: flshort.sty,v 1.7 2001/11/25 17:43:58 matthieu Exp $
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% By Tobias Oetiker
+% Modified by Matthieu Herrb to handle the french extension
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\errorcontextlines=10
+
+%save pageref an label
+\let\lsspageref=\pageref
+\ProvidesPackage{flshort}
+\RequirePackage{verbatim}
+\RequirePackage{fancyhdr}
+\RequirePackage{calc}
+\RequirePackage{ifthen}
+% 
+% Lets have some nice headings
+%
+\pagestyle{fancyplain}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection{} #1}}
+\lhead[\fancyplain{}{\bfseries\thepage}]
+    {\fancyplain{}{\bfseries\rightmark}}
+\rhead[\fancyplain{}{\bfseries\leftmark}]
+    {\fancyplain{}{\bfseries\thepage}}
+\cfoot[]{}
+\addtolength{\headheight}{1.6pt}
+%
+%
+% Earlier paragraphs were separated by some space
+%
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{1.5ex plus 0.7ex minus 0.6ex}
+
+\newcommand{\manual}{\emph{\LaTeX{} Manual}~\cite{manual}} 
+\newcommand{\companion}{\emph{The \LaTeX{} Companion}~\cite{companion}} 
+\newcommand{\desgraupes}{\emph{\LaTeX{}, Apprentissage, guide et référence}~\cite{desgraupes}}
+\newcommand{\guide}{\emph{Local Guide}~\cite{local}}
+\newcommand{\contrib}[3]{#1\quad\texttt{<#2>}{\small\\\quad\textit{#3}}\\[1ex]}
+%
+% Some commands for helping with INDEX creation
+%
+% \protect added because needed with french package. --mh
+%
+\newcommand{\bs}{\symbol{'134}}%Print backslash
+%\newcommand{\bs}{\ensuremath{\mathtt{\backslash}}}%Print backslash
+% Index entry for a command (\cih for hidden command index
+\newcommand{\cih}[1]{%
+\index{commandes!#1@\protect\texttt{\bs#1}}%
+\index{#1@\protect\texttt{\hspace*{-1.2ex}\bs #1}}}
+\newcommand{\ci}[1]{\cih{#1}\texttt{\bs#1}}
+%Package
+\newcommand{\pai}[1]{%
+\index{extensions!#1@\protect\textsf{#1}}%
+\index{#1@\protect\textsf{#1}}%
+\textsf{#1}}
+% Index entry for an environment
+\newcommand{\ei}[1]{%
+\index{environnements!\protect\texttt{#1}}%
+\index{#1@\protect\texttt{#1}}%
+\texttt{#1}}
+% Indexentry for a word (Word inserted into the text)
+\newcommand{\wi}[1]{\index{#1}#1}
+%
+% Typesetting Commands
+%
+\newenvironment{lscommand}%
+    {\nopagebreak\par\small\addvspace{3.2ex plus 0.8ex minus 0.2ex}%
+     \vskip -\parskip
+     \noindent%
+     \begin{tabular}{|l|}\hline\rule{0pt}{1em}\ignorespaces}%
+    {\\\hline\end{tabular}\par\nopagebreak\addvspace{3.2ex plus 0.8ex
+        minus 0.2ex}%
+     \vskip -\parskip}
+%
+% Type setting Code Fragments
+%
+\newenvironment{code}{\begin{quote}}{\end{quote}}
+%
+% Intro Environment
+\newenvironment{intro}{\sffamily}{\vspace*{2ex minus 1.5ex}}
+
+%
+%
+% Symbol Entry for Math Symbol Tables
+%
+\newcommand{\X}[1]{$#1$&\texttt{\string#1}\hspace*{1ex}}
+% normal text .... 
+\newcommand{\SC}[1]{#1&\texttt{\string#1}\hspace*{1ex}}
+% for accents in text mode
+\newcommand{\A}[1]{#1&\texttt{\string#1}\hspace*{1ex}}
+\newcommand{\B}[2]{#1#2&\texttt{\string#1{} #2}\hspace*{1ex}}
+
+\newcommand{\W}[2]{$#1{#2}$&
+  \texttt{\string#1}\texttt{\string{\string#2\string}}\hspace*{1ex}}
+\newcommand{\Y}[1]{$\big#1$ &\texttt{\string#1}}  %
+% Mathsymbol Table
+\newsavebox{\symbbox}
+\newenvironment{symbols}[1]%
+{\par\vspace*{2ex}
+\renewcommand{\arraystretch}{1.1}
+\begin{lrbox}{\symbbox}
+\hspace*{4ex}\begin{tabular}{@{}#1@{}}}%
+{\end{tabular}\end{lrbox}\makebox[\textwidth]{\usebox{\symbbox}}\par\medskip}
+%
+% Special Prep for AMS Symbols Printout
+% Should work if AMS is not available
+%
+
+% we have no PS versions of the rsfs fonts ... so this is a nogo for pdf
+\ifx\pdfoutput\undefined % We're not running pdftex
+\IfFileExists{mathrsfs.sty}
+  {\RequirePackage{mathrsfs}\let\MathRSFS\mathscr\let\mathscr\relax}{}
+\fi
+\IfFileExists{amssymb.sty}
+  {\let\noAMS\relax \RequirePackage{amssymb}}
+  {\def\noAMS{\endinput}\RequirePackage{latexsym}}
+\IfFileExists{eucal.sty}
+  {\RequirePackage[mathscr]{eucal}}
+  {\IfFileExists{euscript.sty}
+  {\RequirePackage{euscript}}{}}
+%\IfFileExists{eufrak.sty}
+%  {\RequirePackage{eufrak}}{}
+\IfFileExists{amsbsy.sty}
+  {\RequirePackage{amsbsy}}{}
+
+
+%
+% Print |--| to show a distance
+%
+\newcommand{\demowidth}[1]{\rule{0.3pt}{1.3ex}\rule{#1}{0.3pt}\rule{0.3pt}{1.3ex}}
+%
+% un morceau pour hyperref
+\def\realpageref#1{%
+ \@safe@activestrue%
+ \expandafter\real@setref\csname r@#1\endcsname\@secondoffive{#1}%
+ \@safe@activesfalse%
+}
+
+%
+% --- example ----
+% This is an environment to set LaTeX examples.
+% On the left side the source text and on the
+% right side the typeset text.
+%
+% \begin{example}
+% \Large This is Large
+% \end{example}
+%
+% This Part is stolen from the verbaim.sty by FMi
+% 
+\newwrite\example@out
+\newbox\exa@box
+\newcounter{exacnt}
+\setcounter{exacnt}{1}
+\newlength{\savefboxrule}
+\newlength{\savefboxsep}
+\newlength{\outdent}
+\setlength{\outdent}{2cm}
+\addtolength{\headwidth}{\outdent}
+
+\newenvironment{example}%
+{\begingroup% Lets Keep the Changes Local
+  \@bsphack
+  \immediate\openout \example@out \jobname.exa
+  \let\do\@makeother\dospecials\catcode`\^^M\active
+  \def\verbatim@processline{%
+    \immediate\write\example@out{\the\verbatim@line}}%
+  \verbatim@start}%
+{\immediate\closeout\example@out\@esphack\endgroup%
+                                %
+                                % And here comes my part. :-
+                                %
+\setbox\exa@box=\vbox{% This box is mainly for debugging
+  \stepcounter{exacnt}%
+  \setlength{\parindent}{0pt}%
+% Page \lsspageref{exa:\theexacnt}
+\expandafter\ifx\csname r@exa:\theexacnt\endcsname\relax\else
+\ifx\pdfoutput\undefined % We're not running pdftex
+  \ifx\@pr@ORI\undefined % We're not using french package
+    \def\exa@page{\HyPsd@pageref{exa:\theexacnt}}%
+  \else %
+    \def\exa@page{\@pr@ORI{exa:\theexacnt}}% french pageref is not a number
+  \fi %
+\else %
+  \def\exa@page{\HyPsd@pageref{exa:\theexacnt}}%
+\fi
+\ifodd\exa@page\hspace*{0pt}\else\hspace*{-\outdent}\fi%
+\fi
+   \makebox[\textwidth][l]{%
+    \raisebox{-\height}[0pt][\totalheight]{%
+      \begin{minipage}[t]{0.5\outdent+0.46\textwidth-3mm}%
+        \small\verbatiminput{\jobname.exa}
+      \end{minipage}}%
+    \hspace{5mm}%
+    \setlength{\savefboxrule}{\fboxrule}%
+    \setlength{\fboxrule}{0.1pt}%
+    \setlength{\savefboxsep}{\fboxsep}%
+    \setlength{\fboxsep}{3mm}%
+    \raisebox{-\height}[0pt][\totalheight]{%
+      \fbox{%
+        \begin{minipage}[t]{0.5\outdent+0.54\textwidth-2mm-2\fboxrule-2\fboxsep-0.7ex}%
+          \setlength{\fboxrule}{\savefboxrule}%
+          \setlength{\fboxsep}{\savefboxsep}%
+          \setlength{\fboxrule}{0.5pt}%
+          %\setlength{\parskip}{1ex plus 0.4ex minus 0.2ex}%
+          \setlength{\parskip}{0ex plus 0ex minus 0ex}%
+          \begin{trivlist}\item\small\input{\jobname.exa}
+          \end{trivlist}
+        \end{minipage}
+        }%
+      }%
+    }\label{exa:\theexacnt}%
+} % end vbox
+%\showthe\ht\exa@box
+\par\addvspace{2.0ex plus 0.8ex minus 1ex}\vskip -\parskip
+\noindent\box\exa@box
+\par\addvspace{3.2ex plus 0.8ex minus 1ex}\vskip -\parskip
+}
+
+\newenvironment{lined}[1]%
+ {\begin{center}\begin{minipage}{#1}\hrule\medskip}
+ {\vspace{-1ex}\hrule \end{minipage}\end{center}}
+% I want no headers on pages created by clearpage
+
+\renewcommand{\cleardoublepage}
+    {\clearpage\if@twoside \ifodd\c@page\else
+    \hbox{}\thispagestyle{empty}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+% French.sty redefined tilde. Grrr
+\ifx\@tildeORI\undefined
+\else
+\let\tilde\@tildeORI
+\fi
